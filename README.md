@@ -1,8 +1,6 @@
 # mobi-2th-begginer-2
 ### 3주차
-```
-https://lyrical-brain-e0f.notion.site/mobi-beginner-week-3-0d1a1889390849729e292c60410a605e?pvs=4
-```
+<a href="https://lyrical-brain-e0f.notion.site/mobi-beginner-week-3-0d1a1889390849729e292c60410a605e?pvs=4">@see</a>
 
 ### 기간
 ```
