@@ -13,6 +13,7 @@
   }
   html {
     font-size: 100%;
+    @apply text-theme-main-thick;
   }
 
   ul,

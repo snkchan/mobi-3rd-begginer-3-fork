@@ -4,5 +4,5 @@ export const FONT_SIZE = {
   medium: "2.0rem",
   large: "2.4rem",
   big: "3.2rem",
-  huge: "100rem",
+  huge: "4.8rem",
 }
