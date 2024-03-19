@@ -26,6 +26,7 @@ const Comment = () => {
       prevPageUrl={"/birth&moblie"}
       RegisterForm={
         <TextareaAndErrors
+          defaultValue={history.comment}
           placeholder="100~300자 사이로 입력해주세요"
           register={register}
           resgisterKey={REGISTER_KEY.comment}
