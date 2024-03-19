@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { RegisterBase, InputAndErrors } from "../components"
 import { useNavigate } from "react-router-dom"
+import { REGISTER_KEY } from "../const/key"
 
 const IdAndPw = () => {
   const navi = useNavigate()
@@ -15,8 +16,8 @@ const IdAndPw = () => {
 
   const onSubmit = (e) => {
     const newHistory = { ...history, ...e }
-    sessionStorage.setItem("data", JSON.stringify(newHistory))
-    JSON.parse(sessionStorage.getItem("data"))
+    sessionStorage.setItem(REGISTER_KEY.sessionKey, JSON.stringify(newHistory))
+    JSON.parse(sessionStorage.getItem(REGISTER_KEY.sessionKey))
     navi("/birth&moblie")
   }
 
@@ -32,14 +33,14 @@ const IdAndPw = () => {
             defaultValue={history.email}
             placeholder="email을 입력해주세요"
             register={register}
-            resgisterKey={"email"}
+            resgisterKey={REGISTER_KEY.email}
             errors={errors}
           />
           <InputAndErrors
             defaultValue={history.password}
             placeholder="password를 입력해주세요"
             register={register}
-            resgisterKey={"password"}
+            resgisterKey={REGISTER_KEY.password}
             errors={errors}
           />
         </>

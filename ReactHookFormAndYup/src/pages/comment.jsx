@@ -2,6 +2,7 @@ import { RegisterBase, TextareaAndErrors } from "../components"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { schemeComment } from "../schemes"
+import { REGISTER_KEY } from "../const/key"
 const Comment = () => {
   const history = JSON.parse(sessionStorage.getItem("data")) ?? ""
   const {
@@ -27,7 +28,7 @@ const Comment = () => {
         <TextareaAndErrors
           placeholder="100~300자 사이로 입력해주세요"
           register={register}
-          resgisterKey={"comment"}
+          resgisterKey={REGISTER_KEY.comment}
           errors={errors}
         />
       }
