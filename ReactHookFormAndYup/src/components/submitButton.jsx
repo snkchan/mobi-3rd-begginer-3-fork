@@ -1,6 +1,6 @@
 import { tailwindMerge } from "../utils"
 
-const SubmitButton = ({ children, disable, ...rest }) => {
+const SubmitButton = ({ children, disable = true, ...rest }) => {
   return (
     <button
       disabled={!disable}
