@@ -5,6 +5,7 @@ const TextareaAndErrors = ({ register, resgisterKey, errors, ...rest }) => {
     "w-full h-[1rem] text-system-warning-thick text-ellipsis  overflow-hidden text-sm font-bold"
   return (
     <div className="w-[80%] h-[22rem] flex flex-col ">
+      <span className="text-tiny">{resgisterKey}</span>
       <textarea
         className={TEXT_CSS}
         autoComplete="off"

@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom"
 import SubmitButton from "./submitButton"
 
 const RegisterBase = ({
@@ -7,10 +6,7 @@ const RegisterBase = ({
   isValid,
   title,
   RegisterForm,
-  targetPageUrl,
 }) => {
-  const navi = useNavigate()
-
   return (
     <>
       <div className="w-1 h-[5rem]" />
@@ -21,13 +17,7 @@ const RegisterBase = ({
         >
           <div className="text-[4rem] text-center w-fit h-fit">{title}</div>
           {RegisterForm}
-          <SubmitButton
-            type="submit"
-            disable={isValid}
-            onClick={() => {
-              navi(targetPageUrl)
-            }}
-          >
+          <SubmitButton type="submit" disable={isValid}>
             next
           </SubmitButton>
         </form>
