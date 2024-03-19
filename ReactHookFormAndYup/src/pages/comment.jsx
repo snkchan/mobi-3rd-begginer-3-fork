@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { schemeComment } from "../schemes"
 import { REGISTER_KEY } from "../const/key"
+import { manageUserData } from "../utils"
 const Comment = () => {
   const history = JSON.parse(sessionStorage.getItem("data")) ?? ""
   const {
@@ -11,9 +12,8 @@ const Comment = () => {
     formState: { errors, isValid },
   } = useForm({ mode: "onChange", resolver: yupResolver(schemeComment) })
 
-  const onSubmit = (e) => {
-    const newHistory = { ...history, ...e }
-    sessionStorage.setItem("data", JSON.stringify(newHistory))
+  const onSubmit = (data) => {
+    manageUserData(history, data)
     alert(sessionStorage.getItem("data"))
   }
 

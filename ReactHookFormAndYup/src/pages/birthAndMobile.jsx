@@ -4,20 +4,19 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { schemeBirthAndMobile } from "../schemes"
 import { useNavigate } from "react-router-dom"
 import { REGISTER_KEY } from "../const/key"
+import { manageUserData } from "../utils"
 
 const BirthAndMobile = () => {
   const navi = useNavigate()
-  const history = JSON.parse(sessionStorage.getItem("data"))
+  const history = JSON.parse(sessionStorage.getItem("data")) ?? ""
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({ mode: "onChange", resolver: yupResolver(schemeBirthAndMobile) })
 
-  const onSubmit = (e) => {
-    console.log(e)
-    const newHistory = { ...history, ...e }
-    sessionStorage.setItem("data", JSON.stringify(newHistory))
+  const onSubmit = (data) => {
+    manageUserData(history, data)
     navi("/comment")
   }
 
