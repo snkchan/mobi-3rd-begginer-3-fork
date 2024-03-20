@@ -6,6 +6,6 @@
 
 //
 
-export * from "./color"
-export * from "./font-size"
-export * from "./font-weight"
+export * from './color'
+export * from './font-size'
+export * from './font-weight'
