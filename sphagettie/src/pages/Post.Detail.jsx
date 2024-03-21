@@ -1,53 +1,58 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import CommentPageNation from "../components/pagenation/Pagenation.Comment";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { useFetchData } from "../hooks/use-fetch-data"
+import { KEY } from "../const"
+import PageNation from "../components/PageNation"
+import { checkUserAuth } from "../utils"
 
-const LIMIT_TAKE = 20;
 const PostDetailPage = () => {
-  const [params] = useSearchParams();
-  const [postDetail, setPostDetail] = useState([]);
-  const [commentList, setCommentList] = useState([]);
-  const [isOpenCommentList, setIsOpenCommentList] = useState(false);
+  const [isOpenCommentList, setIsOpenCommentList] = useState(false)
+  const {
+    setParamValues,
+    getParamValues,
+    fetchPostDataByUrlAndDataForm,
+    fetchPostDetail,
+    postData: commentList,
+    postDetail,
+  } = useFetchData()
 
-  const fetchPostDetail = async () => {
-    const response = await axios.get("/api/post");
-    setPostDetail(response.data);
-  };
+  useEffect(() => {
+    checkUserAuth()
+    fetchPostDetail()
+    setParamValues({
+      keyValueArr: [
+        [KEY.PAGE, 1],
+        [KEY.LIMIT, 10],
+        [KEY.TAKE, 10],
+      ],
+    })
+  }, [])
 
-  const fetchComments = async () => {
-    const response = await axios.get("/api/comments", {
-      params: {
-        take: params.get("take") ?? LIMIT_TAKE,
-      },
-    });
-    console.log(response.data);
-    setCommentList(response.data.Comments);
-  };
+  const paramValues = getParamValues({
+    keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
+  })
+
+  useEffect(() => {
+    if (!isOpenCommentList) return
+    fetchPostDataByUrlAndDataForm({
+      ...paramValues,
+      dataForm: "Comments",
+      address: "comments",
+    })
+  }, [paramValues[KEY.PAGE]])
 
   const onClickMoreComments = async () => {
-    setIsOpenCommentList(true);
-    fetchComments();
-  };
+    setIsOpenCommentList(true)
+    await fetchPostDataByUrlAndDataForm({
+      ...paramValues,
+      dataForm: "Comments",
+      address: "comments",
+    })
+  }
 
   const onClickHiddenComments = () => {
-    setIsOpenCommentList(false);
-  };
-
-  useEffect(() => {
-    const userName = localStorage.getItem("userName");
-    if (!userName) {
-      alert("로그인이 필요합니다");
-      window.location.href = "/";
-    }
-    fetchPostDetail();
-  }, []);
-
-  useEffect(() => {
-    if (!isOpenCommentList) return;
-    fetchComments();
-  }, [params]);
-
+    setIsOpenCommentList(false)
+  }
+  if (!postDetail) return
   return (
     <div>
       <h1>Post Detail Page</h1>
@@ -62,17 +67,17 @@ const PostDetailPage = () => {
         )}
         {isOpenCommentList && (
           <>
-            {commentList.map((comment) => (
+            {commentList?.map((comment) => (
               <div key={comment.id}>
                 <p>{comment.content}</p>
                 <p>{comment.User.nickName}</p>
               </div>
             ))}
-            <CommentPageNation />
+            <PageNation address="comments" />
           </>
         )}
       </div>
     </div>
-  );
-};
-export default PostDetailPage;
+  )
+}
+export default PostDetailPage

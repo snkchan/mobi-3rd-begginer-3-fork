@@ -4,8 +4,8 @@ import { useSearchParams } from "react-router-dom"
 
 export const useFetchData = () => {
   const [params, setParams] = useSearchParams()
-  const [postList, setPostList] = useState([])
-  const [pageNation, setPageNation] = useState()
+  const [postData, setPostData] = useState()
+  const [postDetail, setPostDetail] = useState()
 
   /**
    * @parmeter keyArr - Array : [key,key, ...]
@@ -28,7 +28,7 @@ export const useFetchData = () => {
    * @paramter page - string : url의 page값
    * @paramter limit - string : url의 limit
    * @paramter take - string : url의 take값
-   * @paramter dataForm - string : "Posts" | "PageNation"
+   * @paramter dataForm - string : "Posts" | "PageNation" | "Comments"
    * @paramter address - string : "posts" | "comments"
    */
   const fetchPostDataByUrlAndDataForm = async ({
@@ -45,15 +45,19 @@ export const useFetchData = () => {
         limit,
       },
     })
-    if (dataForm === "Posts") return setPostList(response.data[dataForm])
-    if (dataForm === "PageNation")
-      return setPageNation({ ...response.data[dataForm] })
+    setPostData(response.data[dataForm])
   }
+  const fetchPostDetail = async () => {
+    const response = await axios.get("/api/post")
+    setPostDetail(response.data)
+  }
+
   return {
     getParamValues,
     setParamValues,
     fetchPostDataByUrlAndDataForm,
-    postList,
-    pageNation,
+    fetchPostDetail,
+    postData,
+    postDetail,
   }
 }

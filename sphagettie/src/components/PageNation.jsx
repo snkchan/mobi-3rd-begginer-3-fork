@@ -7,7 +7,7 @@ const PageNation = ({ address }) => {
     getParamValues,
     setParamValues,
     fetchPostDataByUrlAndDataForm,
-    pageNation,
+    postData: pageNation,
   } = useFetchData()
 
   const paramValues = getParamValues({
@@ -17,7 +17,9 @@ const PageNation = ({ address }) => {
 
   useEffect(() => {
     fetchPostDataByUrlAndDataForm({
-      ...{ ...paramValues, dataForm: "PageNation", address: address },
+      ...paramValues,
+      dataForm: "PageNation",
+      address: address,
     })
   }, [curPage])
 

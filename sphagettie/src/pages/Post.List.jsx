@@ -10,7 +10,7 @@ const PostListPage = () => {
     getParamValues,
     setParamValues,
     fetchPostDataByUrlAndDataForm,
-    postList,
+    postData: postList,
   } = useFetchData()
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const PostListPage = () => {
       },
     })
   }
-
+  if (!postList) return
   return (
     <table>
       <caption>Post List Page</caption>
