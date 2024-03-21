@@ -59,14 +59,11 @@ const PostDetailPage = () => {
       <div>
         <p>제목: {postDetail.title}</p>
         <p>내용: {postDetail.content}</p>
-        {!isOpenCommentList && (
+        {!isOpenCommentList ? (
           <button onClick={onClickMoreComments}>댓글 보기</button>
-        )}
-        {isOpenCommentList && (
-          <button onClick={onClickHiddenComments}>댓글 숨기기</button>
-        )}
-        {isOpenCommentList && (
+        ) : (
           <>
+            <button onClick={onClickHiddenComments}>댓글 숨기기</button>
             {commentList?.map((comment) => (
               <div key={comment.id}>
                 <p>{comment.content}</p>

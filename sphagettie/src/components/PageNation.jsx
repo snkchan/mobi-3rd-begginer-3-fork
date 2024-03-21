@@ -13,7 +13,6 @@ const PageNation = ({ address }) => {
   const paramValues = getParamValues({
     keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
   })
-  const curPage = paramValues[KEY.PAGE]
 
   useEffect(() => {
     fetchPostDataByUrlAndDataForm({
@@ -21,7 +20,7 @@ const PageNation = ({ address }) => {
       dataForm: "PageNation",
       address: address,
     })
-  }, [curPage])
+  }, [paramValues[KEY.PAGE]])
 
   const onClickPage = ({ page }) => {
     setParamValues({
@@ -32,12 +31,11 @@ const PageNation = ({ address }) => {
       ],
     })
   }
-  const isPrevPageVisible = pageNation?.startPage !== 1
-  const isNextPageVisible =
-    Math.ceil(pageNation?.currentPage / curPage) !==
-    Math.ceil(pageNation?.totalPage / curPage)
-
   if (!pageNation) return
+
+  const isPrevPageVisible = pageNation.startPage !== 1
+  const isNextPageVisible =
+    pageNation.startPage + +paramValues[KEY.TAKE] < pageNation.totalPage
 
   return (
     <div>
