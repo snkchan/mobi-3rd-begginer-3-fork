@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
+import { KEY } from "../const"
 
 export const useFetchData = () => {
   const [params, setParams] = useSearchParams()
@@ -8,44 +9,39 @@ export const useFetchData = () => {
   const [postDetail, setPostDetail] = useState()
 
   /**
-   * @parmeter keyArr - Array : [key,key, ...]
+   * @description query key:value쌍을 반환
    */
-  const getParamValues = ({ keyArr }) => {
-    const urlObj = {}
-    keyArr.forEach((key) => (urlObj[key] = params.get(key)))
-    return urlObj
+  const getParamValues = () => {
+    return {
+      take: params.get(KEY.TAKE),
+      page: params.get(KEY.PAGE),
+      limit: params.get(KEY.LIMIT),
+    }
   }
   /**
-   * @paramter keyValueArr - Array[Array] : [[key,value]...]
+   * @description query key에 값을 선언
    */
-  const setParamValues = ({ keyValueArr }) => {
-    keyValueArr.forEach((keyVal) => params.set(keyVal[0], keyVal[1]))
+  const setParamValues = ({ page, limit, take }) => {
+    params.set(KEY.PAGE, page)
+    params.set(KEY.LIMIT, limit)
+    params.set(KEY.TAKE, take)
     setParams(params)
   }
 
   /**
    * @description
-   * @paramter page - string : url의 page값
-   * @paramter limit - string : url의 limit
-   * @paramter take - string : url의 take값
    * @paramter dataForm - string : "Posts" | "PageNation" | "Comments"
    * @paramter address - string : "posts" | "comments"
    */
-  const fetchPostDataByUrlAndDataForm = async ({
-    take,
-    page,
-    limit,
-    dataForm = "Posts",
-    address,
-  }) => {
+  const fetchDataByFormAndAdd = async ({ form = "Posts", address }) => {
     const response = await axios.get(`/api/${address}`, {
       params: {
-        take,
-        page,
-        limit,
+        take: params.get(KEY.TAKE),
+        page: params.get(KEY.PAGE),
+        limit: params.get(KEY.LIMIT),
       },
     })
-    setPostData(response.data[dataForm])
+    setPostData(response.data[form])
   }
   const fetchPostDetail = async () => {
     const response = await axios.get("/api/post")
@@ -55,7 +51,7 @@ export const useFetchData = () => {
   return {
     getParamValues,
     setParamValues,
-    fetchPostDataByUrlAndDataForm,
+    fetchDataByFormAndAdd,
     fetchPostDetail,
     postData,
     postDetail,

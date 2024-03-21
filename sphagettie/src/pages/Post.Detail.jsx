@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { useFetchData } from "../hooks/use-fetch-data"
-import { KEY } from "../const"
 import PageNation from "../components/PageNation"
 import { checkUserAuth } from "../utils"
 
@@ -9,7 +8,7 @@ const PostDetailPage = () => {
   const {
     setParamValues,
     getParamValues,
-    fetchPostDataByUrlAndDataForm,
+    fetchDataByFormAndAdd,
     fetchPostDetail,
     postData: commentList,
     postDetail,
@@ -18,33 +17,23 @@ const PostDetailPage = () => {
   useEffect(() => {
     checkUserAuth()
     fetchPostDetail()
-    setParamValues({
-      keyValueArr: [
-        [KEY.PAGE, 1],
-        [KEY.LIMIT, 10],
-        [KEY.TAKE, 10],
-      ],
-    })
+    setParamValues({ page: 1, take: 10, limit: 10 })
   }, [])
 
-  const paramValues = getParamValues({
-    keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
-  })
+  const { page } = getParamValues()
 
   useEffect(() => {
     if (!isOpenCommentList) return
-    fetchPostDataByUrlAndDataForm({
-      ...paramValues,
-      dataForm: "Comments",
+    fetchDataByFormAndAdd({
+      form: "Comments",
       address: "comments",
     })
-  }, [paramValues[KEY.PAGE]])
+  }, [page])
 
   const onClickMoreComments = async () => {
     setIsOpenCommentList(true)
-    await fetchPostDataByUrlAndDataForm({
-      ...paramValues,
-      dataForm: "Comments",
+    await fetchDataByFormAndAdd({
+      form: "Comments",
       address: "comments",
     })
   }

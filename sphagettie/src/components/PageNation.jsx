@@ -6,36 +6,27 @@ const PageNation = ({ address }) => {
   const {
     getParamValues,
     setParamValues,
-    fetchPostDataByUrlAndDataForm,
+    fetchDataByFormAndAdd,
     postData: pageNation,
   } = useFetchData()
 
-  const paramValues = getParamValues({
-    keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
-  })
+  const { page, take, limit } = getParamValues()
 
   useEffect(() => {
-    fetchPostDataByUrlAndDataForm({
-      ...paramValues,
-      dataForm: "PageNation",
+    fetchDataByFormAndAdd({
+      form: "PageNation",
       address: address,
     })
-  }, [paramValues[KEY.PAGE]])
+  }, [page])
 
   const onClickPage = ({ page }) => {
-    setParamValues({
-      keyValueArr: [
-        [KEY.PAGE, page],
-        [KEY.LIMIT, paramValues[KEY.LIMIT]],
-        [KEY.TAKE, paramValues[KEY.TAKE]],
-      ],
-    })
+    setParamValues({ page, take, limit })
   }
   if (!pageNation) return
 
   const isPrevPageVisible = pageNation.startPage !== 1
   const isNextPageVisible =
-    pageNation.startPage + +paramValues[KEY.TAKE] < pageNation.totalPage
+    pageNation.startPage + parseInt(take) < pageNation.totalPage
 
   return (
     <div>

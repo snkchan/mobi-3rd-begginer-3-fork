@@ -2,38 +2,28 @@ import { useEffect } from "react"
 import { DialLogState, useDiaLogStore } from "../contexts/DialogProvider"
 import { checkUserAuth } from "../utils"
 import { useFetchData } from "../hooks/use-fetch-data"
-import { KEY } from "../const"
 import PageNation from "../components/PageNation"
 const PostListPage = () => {
   const [, setDiaLogAttribute] = useDiaLogStore()
   const {
     getParamValues,
     setParamValues,
-    fetchPostDataByUrlAndDataForm,
+    fetchDataByFormAndAdd,
     postData: postList,
   } = useFetchData()
 
   useEffect(() => {
     checkUserAuth()
-    setParamValues({
-      keyValueArr: [
-        [KEY.PAGE, 1],
-        [KEY.LIMIT, 10],
-        [KEY.TAKE, 10],
-      ],
-    })
+    setParamValues({ page: 1, take: 10, limit: 10 })
   }, [])
 
-  const paramValues = getParamValues({
-    keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
-  })
+  const { page } = getParamValues()
 
   useEffect(() => {
-    fetchPostDataByUrlAndDataForm({
-      ...paramValues,
+    fetchDataByFormAndAdd({
       address: "posts",
     })
-  }, [paramValues[KEY.PAGE]])
+  }, [page])
 
   const onClickPost = async (postId) => {
     await setDiaLogAttribute({
