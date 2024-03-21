@@ -1,10 +1,10 @@
-import { faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker"
 
 const randomId = {
   generate() {
-    return Math.floor(Math.random() * 100000 + 1);
+    return Math.floor(Math.random() * 100000 + 1)
   },
-};
+}
 
 export const definePostList = (count) =>
   Array(count)
@@ -16,9 +16,9 @@ export const definePostList = (count) =>
       User: {
         id: randomId.generate(),
         nickName: faker.person.firstName(),
-        profileImg: faker.image.image(),
+        profileImg: faker.image.url(),
       },
-    }));
+    }))
 
 export const definePostDetail = {
   id: randomId.generate(),
@@ -27,7 +27,7 @@ export const definePostDetail = {
   Post_img: Array(Math.floor(Math.random() * 3) + 1)
     .fill()
     .map(() => faker.image.url()),
-};
+}
 
 export const definePostComment = (count) =>
   Array(count)
@@ -40,5 +40,5 @@ export const definePostComment = (count) =>
           id: randomId.generate(),
           nickName: faker.person.firstName(),
         },
-      };
-    });
+      }
+    })
