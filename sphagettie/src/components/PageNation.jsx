@@ -1,8 +1,8 @@
-import { useFetchData } from "../../hooks/use-fetch-data"
-import { KEY } from "../../const"
 import { useEffect } from "react"
+import { KEY } from "../const"
+import { useFetchData } from "../hooks/use-fetch-data"
 
-const PostPageNation = () => {
+const PageNation = ({ address }) => {
   const {
     getParamValues,
     setParamValues,
@@ -17,7 +17,7 @@ const PostPageNation = () => {
 
   useEffect(() => {
     fetchPostDataByUrlAndDataForm({
-      ...{ ...paramValues, dataForm: "PageNation" },
+      ...{ ...paramValues, dataForm: "PageNation", address: address },
     })
   }, [curPage])
 
@@ -60,4 +60,4 @@ const PostPageNation = () => {
     </div>
   )
 }
-export default PostPageNation
+export default PageNation

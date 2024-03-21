@@ -29,15 +29,16 @@ export const useFetchData = () => {
    * @paramter limit - string : url의 limit
    * @paramter take - string : url의 take값
    * @paramter dataForm - string : "Posts" | "PageNation"
-   *
+   * @paramter address - string : "posts" | "comments"
    */
   const fetchPostDataByUrlAndDataForm = async ({
     take,
     page,
     limit,
-    dataForm,
+    dataForm = "Posts",
+    address,
   }) => {
-    const response = await axios.get("/api/posts", {
+    const response = await axios.get(`/api/${address}`, {
       params: {
         take,
         page,

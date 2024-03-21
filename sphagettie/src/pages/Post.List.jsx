@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { DialLogState, useDiaLogStore } from "../contexts/DialogProvider"
-import PostPageNation from "../components/pagenation/Pagenation.Post"
 import { checkUserAuth } from "../utils"
 import { useFetchData } from "../hooks/use-fetch-data"
 import { KEY } from "../const"
+import PageNation from "../components/PageNation"
 const PostListPage = () => {
   const [, setDiaLogAttribute] = useDiaLogStore()
   const {
@@ -30,7 +30,8 @@ const PostListPage = () => {
 
   useEffect(() => {
     fetchPostDataByUrlAndDataForm({
-      ...{ ...paramValues, dataForm: "Posts" },
+      ...paramValues,
+      address: "posts",
     })
   }, [paramValues[KEY.PAGE]])
 
@@ -68,7 +69,7 @@ const PostListPage = () => {
           <td>{post.User.nickName}</td>
         </tr>
       ))}
-      <PostPageNation />
+      <PageNation address="posts" />
     </table>
   )
 }
