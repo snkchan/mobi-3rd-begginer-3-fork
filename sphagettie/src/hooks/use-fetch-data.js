@@ -4,16 +4,22 @@ import { useSearchParams } from "react-router-dom"
 
 export const useFetchData = () => {
   const [params, setParams] = useSearchParams()
-  const [postData, setPostData] = useState([])
+  const [postList, setPostList] = useState([])
+  const [pageNation, setPageNation] = useState()
 
-  const getParamValueByKey = ({ key }) => {
-    return params.get(key)
+  /**
+   * @parmeter keyArr - Array : [key,key, ...]
+   */
+  const getParamValues = ({ keyArr }) => {
+    const urlObj = {}
+    keyArr.forEach((key) => (urlObj[key] = params.get(key)))
+    return urlObj
   }
-
-  const setParamValueByKey = ({ key, value }) => {
-    params.set(key, value)
-  }
-  const changeParams = () => {
+  /**
+   * @paramter keyValueArr - Array[Array] : [[key,value]...]
+   */
+  const setParamValues = ({ keyValueArr }) => {
+    keyValueArr.forEach((keyVal) => params.set(keyVal[0], keyVal[1]))
     setParams(params)
   }
 
@@ -25,7 +31,7 @@ export const useFetchData = () => {
    * @paramter dataForm - string : "Posts" | "PageNation"
    *
    */
-  const fetchPostDataByUrlAndDataType = async ({
+  const fetchPostDataByUrlAndDataForm = async ({
     take,
     page,
     limit,
@@ -38,13 +44,15 @@ export const useFetchData = () => {
         limit,
       },
     })
-    setPostData(response.data[dataForm])
+    if (dataForm === "Posts") return setPostList(response.data[dataForm])
+    if (dataForm === "PageNation")
+      return setPageNation({ ...response.data[dataForm] })
   }
   return {
-    changeParams,
-    getParamValueByKey,
-    setParamValueByKey,
-    fetchPostDataByUrlAndDataType,
-    postData,
+    getParamValues,
+    setParamValues,
+    fetchPostDataByUrlAndDataForm,
+    postList,
+    pageNation,
   }
 }
