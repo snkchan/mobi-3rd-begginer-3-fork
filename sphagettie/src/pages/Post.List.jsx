@@ -1,35 +1,41 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { DialLogState, useDiaLogStore } from "../contexts/DialogProvider";
-import PostPageNation from "../components/pagenation/Pagenation.Post";
-import { useSearchParams } from "react-router-dom";
-
-const LIMIT_TAKE = 10;
+import { useEffect } from "react"
+import { DialLogState, useDiaLogStore } from "../contexts/DialogProvider"
+import PostPageNation from "../components/pagenation/Pagenation.Post"
+import { checkUserAuth } from "../utils"
+import { useFetchData } from "../hooks/use-fetch-data"
+import { KEY } from "../const"
 const PostListPage = () => {
-  const [params] = useSearchParams();
-  const [postList, setPostList] = useState([]);
-  const [, setDiaLogAttribute] = useDiaLogStore();
-
-  const fetchPostList = async () => {
-    const response = await axios.get("/api/posts", {
-      params: {
-        take: params.get("take") ?? LIMIT_TAKE,
-      },
-    });
-    setPostList(response.data.Posts);
-  };
+  const [, setDiaLogAttribute] = useDiaLogStore()
+  const {
+    changeParams,
+    getParamValueByKey,
+    setParamValueByKey,
+    fetchPostDataByUrlAndDataType,
+    postData: postList,
+  } = useFetchData()
 
   useEffect(() => {
-    const userName = localStorage.getItem("userName");
-    if (!userName) {
-      alert("로그인이 필요합니다");
-      window.location.href = "/";
-    }
-  }, []);
+    checkUserAuth()
+    setParamValueByKey({ key: KEY.PAGE, value: 1 })
+    setParamValueByKey({ key: KEY.TAKE, value: 10 })
+    setParamValueByKey({ key: KEY.LIMIT, value: 10 })
+    changeParams()
+  }, [])
+
+  const curPage = getParamValueByKey({ key: KEY.PAGE })
+  const take = getParamValueByKey({ key: KEY.TAKE })
+  const limit = getParamValueByKey({ key: KEY.LIMIT })
+
+  // const limit = getParamValueByKey({ key: KEY.LIMIT })
 
   useEffect(() => {
-    fetchPostList();
-  }, [params]);
+    fetchPostDataByUrlAndDataType({
+      take: 10,
+      // limit: limit,
+      // page: curPage,
+      dataForm: "Posts",
+    })
+  }, [curPage])
 
   const onClickPost = async (postId) => {
     await setDiaLogAttribute({
@@ -40,15 +46,15 @@ const PostListPage = () => {
         await setDiaLogAttribute({
           text: "정말로 이동해버린다요!",
           onConfirm: async () => {
-            window.location.href = `/post-detail/${postId}`;
+            window.location.href = `/post-detail/${postId}`
           },
-        });
+        })
       },
       onCancel: () => {
-        setDiaLogAttribute({ isOpen: false });
+        setDiaLogAttribute({ isOpen: false })
       },
-    });
-  };
+    })
+  }
 
   return (
     <table>
@@ -67,6 +73,6 @@ const PostListPage = () => {
       ))}
       <PostPageNation />
     </table>
-  );
-};
-export default PostListPage;
+  )
+}
+export default PostListPage
