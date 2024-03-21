@@ -1,65 +1,63 @@
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-
-const LIMIT_PAGE = 10;
-const LIMIT_TAKE = 20;
+import { useFetchData } from "../../hooks/use-fetch-data"
+import { KEY } from "../../const"
+import { useEffect } from "react"
 
 const PostPageNation = () => {
-  const [params, setParams] = useSearchParams();
-  const [pageNation, setPageNation] = useState();
+  const {
+    getParamValues,
+    setParamValues,
+    fetchPostDataByUrlAndDataForm,
+    pageNation,
+  } = useFetchData()
 
-  const fetchPostPageNation = useCallback(async () => {
-    const response = await axios.get("/api/posts", {
-      params: {
-        page: params.get("page") ?? 1,
-        take: params.get("take") ?? LIMIT_TAKE,
-        limit: params.get("limit") ?? LIMIT_PAGE,
-      },
-    });
-    const pageNation = response.data.PageNation;
-    setPageNation({
-      ...pageNation,
-    });
-  }, [params]);
+  const paramValues = getParamValues({
+    keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
+  })
+  const curPage = paramValues[KEY.PAGE]
 
   useEffect(() => {
-    fetchPostPageNation();
-  }, [fetchPostPageNation, params]);
+    fetchPostDataByUrlAndDataForm({
+      ...{ ...paramValues, dataForm: "PageNation" },
+    })
+  }, [curPage])
 
-  const onClickPage = (page) => {
-    setParams({
-      page,
-    });
-  };
-
-  const isPrevPageVisible = pageNation?.startPage !== 1;
+  const onClickPage = ({ page }) => {
+    setParamValues({
+      keyValueArr: [
+        [KEY.PAGE, page],
+        [KEY.LIMIT, paramValues[KEY.LIMIT]],
+        [KEY.TAKE, paramValues[KEY.TAKE]],
+      ],
+    })
+  }
+  const isPrevPageVisible = pageNation?.startPage !== 1
   const isNextPageVisible =
-    Math.ceil(pageNation?.currentPage / LIMIT_PAGE) !==
-    Math.ceil(pageNation?.totalPage / LIMIT_PAGE);
+    Math.ceil(pageNation?.currentPage / curPage) !==
+    Math.ceil(pageNation?.totalPage / curPage)
+
+  if (!pageNation) return
 
   return (
     <div>
       {isPrevPageVisible && (
-        <button onClick={() => setParams({ page: pageNation.startPage - 1 })}>
+        <button onClick={() => onClickPage({ page: pageNation.startPage - 1 })}>
           이전
         </button>
       )}
-      {pageNation &&
-        Array(pageNation.endPage - pageNation.startPage + 1)
-          .fill()
-          .map((_, i) => pageNation.startPage + i)
-          .map((page) => (
-            <button key={page} onClick={() => onClickPage(page)}>
-              {page}
-            </button>
-          ))}
+      {Array(pageNation.endPage - pageNation.startPage + 1)
+        .fill()
+        .map((_, i) => pageNation.startPage + i)
+        .map((page) => (
+          <button key={page} onClick={() => onClickPage({ page: page })}>
+            {page}
+          </button>
+        ))}
       {isNextPageVisible && (
-        <button onClick={() => setParams({ page: pageNation.endPage + 1 })}>
+        <button onClick={() => onClickPage({ page: pageNation.endPage + 1 })}>
           다음
         </button>
       )}
     </div>
-  );
-};
-export default PostPageNation;
+  )
+}
+export default PostPageNation

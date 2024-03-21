@@ -7,35 +7,32 @@ import { KEY } from "../const"
 const PostListPage = () => {
   const [, setDiaLogAttribute] = useDiaLogStore()
   const {
-    changeParams,
-    getParamValueByKey,
-    setParamValueByKey,
-    fetchPostDataByUrlAndDataType,
-    postData: postList,
+    getParamValues,
+    setParamValues,
+    fetchPostDataByUrlAndDataForm,
+    postList,
   } = useFetchData()
 
   useEffect(() => {
     checkUserAuth()
-    setParamValueByKey({ key: KEY.PAGE, value: 1 })
-    setParamValueByKey({ key: KEY.TAKE, value: 10 })
-    setParamValueByKey({ key: KEY.LIMIT, value: 10 })
-    changeParams()
+    setParamValues({
+      keyValueArr: [
+        [KEY.PAGE, 1],
+        [KEY.LIMIT, 10],
+        [KEY.TAKE, 10],
+      ],
+    })
   }, [])
 
-  const curPage = getParamValueByKey({ key: KEY.PAGE })
-  const take = getParamValueByKey({ key: KEY.TAKE })
-  const limit = getParamValueByKey({ key: KEY.LIMIT })
-
-  // const limit = getParamValueByKey({ key: KEY.LIMIT })
+  const paramValues = getParamValues({
+    keyArr: [KEY.PAGE, KEY.LIMIT, KEY.TAKE],
+  })
 
   useEffect(() => {
-    fetchPostDataByUrlAndDataType({
-      take: 10,
-      // limit: limit,
-      // page: curPage,
-      dataForm: "Posts",
+    fetchPostDataByUrlAndDataForm({
+      ...{ ...paramValues, dataForm: "Posts" },
     })
-  }, [curPage])
+  }, [paramValues[KEY.PAGE]])
 
   const onClickPost = async (postId) => {
     await setDiaLogAttribute({
